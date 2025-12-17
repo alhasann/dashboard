@@ -1,0 +1,1708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Cash for Shelter – Hatay, Türkiye | Final Results Dashboard</title>
+  <script src="https://cdn.plot.ly/plotly-2.30.0.min.js"></script>
+  <style>
+    /* Dark Theme (default) */
+    :root {
+      --bg: #0b1220;
+      --card: #111a2e;
+      --card-solid: rgba(17,26,46,.72);
+      --text: #e8eefc;
+      --muted: #b7c3e6;
+      --border: rgba(255,255,255,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --logo-filter: brightness(0) invert(1);
+      --grid-color: rgba(255,255,255,.08);
+      --story-bg: #1a2744;
+      --story-border: #2d3a52;
+      --story-text: #c8d4f0;
+      --story-heading: #e8eefc;
+      --story-muted: #8a9bc0;
+      --digital-bg: #141d30;
+    }
+
+    /* Light Theme */
+    [data-theme="light"] {
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --card-solid: rgba(255,255,255,.92);
+      --text: #1a1a2e;
+      --muted: #5a6785;
+      --border: rgba(0,0,0,.10);
+      --shadow: 0 10px 30px rgba(0,0,0,.12);
+      --logo-filter: none;
+      --grid-color: rgba(0,0,0,.08);
+      --story-bg: #ffffff;
+      --story-border: #e5e7eb;
+      --story-text: #374151;
+      --story-heading: #111827;
+      --story-muted: #6b7280;
+      --digital-bg: #f9fafb;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Calibri, Arial, sans-serif;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(72, 91, 160,.25), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(20, 158, 201,.22), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+    [data-theme="light"] body,
+    body[data-theme="light"] {
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(2, 104, 57,.08), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(160, 151, 68,.06), transparent 55%),
+                  var(--bg);
+    }
+    html[data-theme="light"] body {
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(2, 104, 57,.08), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(160, 151, 68,.06), transparent 55%),
+                  #f4f6fa;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 26px 18px 60px;
+    }
+    header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      background: var(--card-solid);
+      backdrop-filter: blur(8px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+    .logos {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 220px;
+    }
+    .logos img {
+      height: 64px;
+      width: auto;
+      object-fit: contain;
+      filter: var(--logo-filter) drop-shadow(0 6px 16px rgba(0,0,0,.35));
+      transition: filter 0.3s ease;
+    }
+    [data-theme="light"] .logos img {
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,.15));
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle:hover {
+      background: rgba(255,255,255,.15);
+    }
+    [data-theme="light"] .theme-toggle {
+      background: rgba(0,0,0,.05);
+    }
+    [data-theme="light"] .theme-toggle:hover {
+      background: rgba(0,0,0,.10);
+    }
+    .theme-toggle .icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .theme-toggle .sun { display: none; }
+    .theme-toggle .moon { display: inline; }
+    [data-theme="light"] .theme-toggle .sun { display: inline; }
+    [data-theme="light"] .theme-toggle .moon { display: none; }
+    .theme-toggle .label-light { display: none; }
+    .theme-toggle .label-dark { display: inline; }
+    [data-theme="light"] .theme-toggle .label-light { display: inline; }
+    [data-theme="light"] .theme-toggle .label-dark { display: none; }
+
+    /* Map Toggle Button */
+    .map-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(2, 104, 57, .15);
+      border: 1px solid rgba(2, 104, 57, .3);
+      border-radius: 30px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    .map-toggle:hover {
+      background: rgba(2, 104, 57, .25);
+    }
+    .map-toggle .icon {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .map-toggle .icon-expand { display: inline; }
+    .map-toggle .icon-collapse { display: none; }
+    .map-toggle .label-show { display: inline; }
+    .map-toggle .label-hide { display: none; }
+    body.map-expanded .map-toggle .icon-expand { display: none; }
+    body.map-expanded .map-toggle .icon-collapse { display: inline; }
+    body.map-expanded .map-toggle .label-show { display: none; }
+    body.map-expanded .map-toggle .label-hide { display: inline; }
+
+    /* Map Expanded State */
+    .map-section {
+      transition: all 0.4s ease;
+    }
+    body.map-expanded .map-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      margin: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    body.map-expanded .map-section .plot {
+      flex: 1;
+      height: auto !important;
+      min-height: 0;
+    }
+    body.map-expanded .map-section h2 {
+      padding: 16px 20px 0;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    body.map-expanded .map-section .note {
+      padding: 10px 20px 16px;
+    }
+    body.map-expanded .map-section .close-map {
+      display: flex;
+    }
+    .map-section .close-map {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: rgba(195, 47, 51, .15);
+      border: 1px solid rgba(195, 47, 51, .3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      color: var(--text);
+      font-size: 12px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+    .map-section .close-map:hover {
+      background: rgba(195, 47, 51, .3);
+    }
+    body.map-expanded {
+      overflow: hidden;
+    }
+
+    /* Map Filters */
+    .map-filters {
+      background: var(--card-solid);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+      transition: all 0.3s ease;
+    }
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 12px;
+    }
+    .filter-header h3 {
+      margin: 0;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-toggle {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+    .filters-collapsed .filter-toggle {
+      transform: rotate(-90deg);
+    }
+    .filter-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      max-height: 500px;
+      overflow-y: auto;
+      transition: max-height 0.3s ease;
+    }
+    .filters-collapsed .filter-content {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0;
+    }
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .filter-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .filter-group select,
+    .filter-group input[type="text"] {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    [data-theme="light"] .filter-group select,
+    [data-theme="light"] .filter-group input[type="text"] {
+      background: rgba(0,0,0,.03);
+    }
+    .filter-group select:focus,
+    .filter-group input[type="text"]:focus {
+      outline: none;
+      border-color: #026839;
+      background: rgba(2, 104, 57, .1);
+    }
+    .filter-group select option {
+      background: var(--card);
+      color: var(--text);
+    }
+    .range-inputs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .range-input-wrapper {
+      position: relative;
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .range-input-wrapper input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      padding-left: 24px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.2s ease;
+    }
+    .range-input-wrapper input[type="number"]:has(+ .input-suffix) {
+      padding-left: 10px;
+      padding-right: 30px;
+    }
+    [data-theme="light"] .range-input-wrapper input[type="number"] {
+      background: rgba(0,0,0,.03);
+    }
+    .range-input-wrapper input[type="number"]:focus {
+      outline: none;
+      border-color: #026839;
+      background: rgba(2, 104, 57, .1);
+    }
+    .input-prefix {
+      position: absolute;
+      left: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .input-suffix {
+      position: absolute;
+      right: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+    .range-separator {
+      color: var(--muted);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: #026839;
+    }
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(2, 104, 57, .15);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+    }
+    .filter-btn:hover {
+      background: rgba(2, 104, 57, .25);
+      border-color: #026839;
+    }
+    .filter-btn.clear {
+      background: rgba(195, 47, 51, .15);
+    }
+    .filter-btn.clear:hover {
+      background: rgba(195, 47, 51, .25);
+      border-color: #c32f33;
+    }
+    .filter-stats {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 8px;
+    }
+    .filter-stats strong {
+      color: #026839;
+      font-weight: 700;
+    }
+    .title {
+      flex: 1;
+      padding: 0 10px;
+      text-align: center;
+    }
+    .title h1 {
+      font-size: 22px;
+      margin: 0 0 4px 0;
+      letter-spacing: .2px;
+    }
+    .title .sub {
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .meta {
+      text-align: right;
+      min-width: 210px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card {
+      grid-column: span 12;
+      border: 1px solid var(--border);
+      background: rgba(17,26,46,.70);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 14px 14px 12px;
+      transition: all 0.3s ease;
+    }
+    [data-theme="light"] .card {
+      background: rgba(255,255,255,.85);
+    }
+    .card h2 {
+      margin: 0 0 10px 0;
+      font-size: 16px;
+      letter-spacing: .2px;
+    }
+    .note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.45;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+    }
+    .kpi {
+      grid-column: span 3;
+      padding: 12px 12px 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.03);
+      min-height: 86px;
+      transition: all 0.3s ease;
+    }
+    [data-theme="light"] .kpi {
+      background: rgba(2, 104, 57,.03);
+    }
+    .kpi .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .kpi .value {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: .3px;
+    }
+    .kpi .small {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .col-6 { grid-column: span 6; }
+    .col-7 { grid-column: span 7; }
+    .col-5 { grid-column: span 5; }
+    .col-4 { grid-column: span 4; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+
+    .plot {
+      width: 100%;
+      height: 360px;
+    }
+    .plot.tall {
+      height: 420px;
+    }
+
+    footer {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      background: rgba(17,26,46,.60);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: all 0.3s ease;
+    }
+    [data-theme="light"] footer {
+      background: rgba(255,255,255,.80);
+    }
+    footer .logos img { height: 38px; }
+
+    @media (max-width: 980px) {
+      .kpi { grid-column: span 6; }
+      .col-6, .col-7, .col-5, .col-4, .col-8 { grid-column: span 12; }
+      header { flex-direction: column; align-items: stretch; }
+      .meta { text-align: left; }
+      .title { text-align: left; padding: 0; }
+      .logos { justify-content: space-between; min-width: 0; }
+    }
+    @media print {
+      body { background: #fff; color: #000; }
+      header, .card, footer { box-shadow: none; background: #fff; }
+      .note, .meta, .kpi .label, .kpi .small { color: #333; }
+      .theme-toggle, .map-toggle, .close-map { display: none !important; }
+      .logos img { filter: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logos">
+        <img src="images/login_logo.svg" alt="IHH Logo" style="height:64px;">
+      </div>
+
+      <div class="title">
+        <h1>Cash for Shelter Project – Hatay, Türkiye</h1>
+        <div class="sub">Final Results Dashboard (Data source: Excel project records)</div>
+      </div>
+
+      <div class="logos" style="justify-content:flex-end; align-items:center; gap:10px;">
+        <button class="map-toggle" onclick="toggleMap()" title="Expand map to fullscreen">
+          <span class="icon icon-expand">🗺️</span>
+          <span class="icon icon-collapse">✕</span>
+          <span class="label-show">Map</span>
+          <span class="label-hide">Close</span>
+        </button>
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode">
+          <span class="icon moon">🌙</span>
+          <span class="icon sun">☀️</span>
+          <span class="label-dark">Dark</span>
+          <span class="label-light">Light</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card col-12">
+        <h2>Project Overview</h2>
+        <div class="kpis" id="kpiGrid"></div>
+        <p class="note" style="margin-top:10px;">
+          Derived indicators: Second installment coverage <b>98.2%</b> and completion rate (100%+) <b>92.7%</b>.
+        </p>
+      </section>
+
+      <section class="card col-5">
+        <h2>Implementation Flow</h2>
+        <div id="funnel" class="plot"></div>
+        <p class="note">Pipeline from assessment to final disbursement, based on verified project totals.</p>
+      </section>
+
+      <section class="card col-7">
+        <h2>Monthly Progress</h2>
+        <div id="monthly" class="plot"></div>
+        <p class="note">Monthly operational milestones to reflect implementation pace and closure period.</p>
+      </section>
+
+      <section class="card col-6">
+        <h2>Geographic Coverage</h2>
+        <div id="districtBar" class="plot"></div>
+        <p class="note">Distribution of supported households by district.</p>
+      </section>
+
+      <section class="card col-6">
+        <h2>Beneficiary Profile</h2>
+        <div id="profile" class="plot"></div>
+        <p class="note">Household head gender and area type (urban/rural).</p>
+      </section>
+
+      <section class="card col-12">
+        <h2>Financial Disbursements</h2>
+        <div id="financial" class="plot tall"></div>
+        <p class="note">Monthly cash transfers (TRY) for 1st and 2nd installments.</p>
+      </section>
+
+      
+
+      <section class="card col-12">
+        <h2>
+<section id="success-stories" style="margin:60px auto; max-width:1200px;">
+  <h2 style="text-align:center; margin-bottom:30px; color:var(--text);">Human Impact | Success Stories</h2>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+    
+    <!-- Story Card 1 -->
+    <div class="story-card" style="border:1px solid var(--story-border); border-radius:14px; padding:24px; background:var(--story-bg); transition: all 0.3s ease;">
+      <div style="font-size:14px; color:var(--story-muted); margin-bottom:8px;">Case 792</div>
+      <h3 style="margin-top:0; color:var(--story-heading);">From Vulnerability to Stability</h3>
+      <p style="color:var(--story-text); line-height:1.6;">
+        A special-needs household living in extreme vulnerability was unable to rehabilitate their
+        lightly damaged home following the earthquakes. Through tailored cash assistance and close
+        coordination, the family restored a safe and dignified living environment.
+      </p>
+      <div style="margin-top:18px; font-size:28px; font-weight:600; color:#026839;">
+        Special Needs Household
+      </div>
+    </div>
+
+    <!-- Story Card 2 -->
+    <div class="story-card" style="border:1px solid var(--story-border); border-radius:14px; padding:24px; background:var(--story-bg); transition: all 0.3s ease;">
+      <div style="font-size:14px; color:var(--story-muted); margin-bottom:8px;">Case 5</div>
+      <h3 style="margin-top:0; color:var(--story-heading);">The Power of Empowerment</h3>
+      <p style="color:var(--story-text); line-height:1.6;">
+        A low-income family living in a damp and unhealthy house received increased support to address
+        critical repairs. Motivated by the assistance, the family invested additional resources,
+        significantly enhancing the quality of their home.
+      </p>
+      <div style="margin-top:18px; font-size:32px; font-weight:700; color:#026839;">
+        222% Completion Rate
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+Digital Innovation (Case Management App)
+
+<div id="digital-kpi-final" style="margin-top:18px; padding:20px; border:1px solid var(--story-border); border-radius:14px; background:var(--digital-bg); transition: all 0.3s ease;">
+  <p style="margin:0 0 10px 0; color:var(--story-text); line-height:1.6;">
+    <strong>The digital tool is fully scalable and adaptable</strong>, designed to support future shelter
+    interventions beyond the current project lifecycle.
+  </p>
+  <p style="margin:0 0 12px 0; color:var(--story-text); line-height:1.6;">
+    The system <strong>operates seamlessly on mobile devices and laptops</strong>, enabling real-time field
+    documentation and remote technical oversight.
+  </p>
+  <div style="display:flex; align-items:center; gap:16px;">
+    <div style="font-size:36px; font-weight:700; color:#026839;">100%</div>
+    <div style="font-size:14px; color:var(--story-text);">
+      of supported cases fully documented, verified, and controlled digitally
+    </div>
+  </div>
+</div>
+</h2>
+        <p class="note">
+          A custom-built digital tool supported end-to-end case management (case registration → BoQ preparation & approval → works progress verification → completion control), improving data integrity,
+          audit readiness, and monitoring efficiency. .
+        </p>
+      </section>
+    </div>
+
+    <footer>
+      <div class="logos">
+        <img src="images/login_logo.svg" alt="IHH Logo" style="height:38px;">
+      </div>
+      <div>All figures displayed are aligned with the Excel dataset. Generated: 2025-12-16.</div>
+    </footer>
+  </div>
+
+<script>
+const DATA = {"kpis": {"household_surveys": 775, "supported_households": 386, "mous_signed": 387, "first_installments": 387, "second_installments": 379, "completed_100_plus": 358, "replaced_cases": 6, "cancelled_returned": 1}, "derived": {"second_installment_rate": 98.2, "completion_rate": 92.7}, "months": ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"], "timeline": {"surveys": [10, 305, 112, 25, 139, 116, 48, 6, 14, 0], "boq": [0, 1, 25, 106, 69, 157, 0, 20, 12, 0], "mou": [0, 0, 22, 77, 100, 100, 75, 1, 12, 0], "first": [0, 0, 0, 96, 100, 99, 76, 4, 10, 2], "second": [0, 0, 0, 0, 0, 0, 66, 54, 230, 29]}, "funnel": {"labels": ["Surveys", "BoQs", "MoUs", "1st Payment", "2nd Payment"], "values": [775, 390, 387, 387, 379]}, "district": [{"District": "Antakya", "BNFs": 83, "%": 0.22}, {"District": "K\u0131r\u0131khan", "BNFs": 303, "%": 0.78}], "gender": [{"Category": "Male-headed households", "Count": 197, "Share": 0.51}], "area": [{"Category": "Rural", "Count": 134, "Share": 0.35}], "financial": {"months": ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"], "series": ["1st paymet in TL", "2nd paymet in TL"], "values": {"1st paymet in TL": [2151695.0, 2305589.0, 2331028.0, 2171522.0, 107655.0, 198670.0, 55705.0], "2nd paymet in TL": [0.0, 0.0, 0.0, 1390151.0, 1218472.5, 4966723.5, 650885.5]}}, "map": [{"District": "K\u0131r\u0131khan", "Latitude": 36.497, "Longitude": 36.357, "Households": 303, "Completion %": 92}, {"District": "Antakya", "Latitude": 36.202, "Longitude": 36.16, "Households": 83, "Completion %": 88}]};
+
+function fmt(n) {
+  if (n === null || n === undefined) return "";
+  const s = Number(n).toLocaleString('en-US');
+  return s;
+}
+
+function buildKPIs() {
+  const items = [
+    {label:"Household surveys", value: DATA.kpis.household_surveys},
+    {label:"Supported households", value: DATA.kpis.supported_households},
+    {label:"MoUs signed", value: DATA.kpis.mous_signed},
+    {label:"1st installments", value: DATA.kpis.first_installments},
+    {label:"2nd installments", value: DATA.kpis.second_installments, small:`Coverage: ${DATA.derived.second_installment_rate}%`},
+    {label:"Completed (100%+)", value: DATA.kpis.completed_100_plus, small:`Rate: ${DATA.derived.completion_rate}%`},
+    {label:"Replaced cases", value: DATA.kpis.replaced_cases},
+    {label:"Cancelled/returned", value: DATA.kpis.cancelled_returned},
+  ];
+
+  const grid = document.getElementById("kpiGrid");
+  grid.innerHTML = "";
+  items.forEach(it => {
+    const div = document.createElement("div");
+    div.className = "kpi";
+    div.innerHTML = `
+      <div class="label">${it.label}</div>
+      <div class="value">${fmt(it.value)}</div>
+      <div class="small">${it.small ? it.small : "&nbsp;"}</div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+function plotFunnel() {
+  const trace = {
+    type: "funnel",
+    y: DATA.funnel.labels,
+    x: DATA.funnel.values,
+    textinfo: "value+percent initial"
+  };
+  const layout = {
+    margin: {l: 120, r: 20, t: 10, b: 40},
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: "#e8eefc"},
+    colorway: ["#026839", "#a09744", "#c32f33", "#0a6d3f", "#4a9960"]
+  };
+  Plotly.newPlot("funnel", [trace], layout, {displayModeBar:false, responsive:true});
+}
+
+function plotMonthly() {
+  const months = DATA.months;
+  const traces = [
+    {name:"Surveys", x: months, y: DATA.timeline.surveys, type:"scatter", mode:"lines+markers"},
+    {name:"BoQs", x: months, y: DATA.timeline.boq, type:"scatter", mode:"lines+markers"},
+    {name:"MoUs", x: months, y: DATA.timeline.mou, type:"scatter", mode:"lines+markers"},
+    {name:"1st Payment", x: months, y: DATA.timeline.first, type:"scatter", mode:"lines+markers"},
+    {name:"2nd Payment", x: months, y: DATA.timeline.second, type:"scatter", mode:"lines+markers"},
+  ];
+  const layout = {
+    margin: {l: 50, r: 20, t: 10, b: 40},
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    legend: {orientation:"h", y:-0.25},
+    xaxis: {title:"Month", gridcolor:"rgba(255,255,255,.08)"},
+    yaxis: {title:"Count", gridcolor:"rgba(255,255,255,.08)"},
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: "#e8eefc"},
+    colorway: ["#026839", "#a09744", "#c32f33", "#0a6d3f", "#4a9960"]
+  };
+  Plotly.newPlot("monthly", traces, layout, {displayModeBar:false, responsive:true});
+}
+
+function plotDistrict() {
+  const rows = DATA.district;
+  const x = rows.map(r => r.District);
+  const y = rows.map(r => r.BNFs);
+  const trace = {type:"bar", x, y};
+  const layout = {
+    margin: {l: 50, r: 20, t: 10, b: 50},
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    xaxis: {title:"District", gridcolor:"rgba(255,255,255,.08)"},
+    yaxis: {title:"Households", gridcolor:"rgba(255,255,255,.08)"},
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: "#e8eefc"},
+    colorway: ["#026839", "#a09744", "#c32f33", "#0a6d3f", "#4a9960"]
+  };
+  Plotly.newPlot("districtBar", [trace], layout, {displayModeBar:false, responsive:true});
+}
+
+function plotProfile() {
+  // Ensure both categories are displayed even if the Excel extract contains only one row
+  const totalHH = Number(DATA.kpis.supported_households) || 0;
+
+  function normalize(series, expectedOrder) {
+    const m = new Map((series || []).map(r => [String(r.Category).trim(), Number(r.Count) || 0]));
+    const counts = expectedOrder.map(k => m.has(k) ? m.get(k) : null);
+
+    // If exactly one expected category is missing, infer it from the total
+    const missingIdx = counts.map((v,i)=>v===null?i:-1).filter(i=>i>=0);
+    const presentSum = counts.filter(v=>v!==null).reduce((a,b)=>a+b,0);
+
+    if (missingIdx.length === 1 && totalHH > 0) {
+      const inferred = Math.max(0, totalHH - presentSum);
+      counts[missingIdx[0]] = inferred;
+    }
+
+    // If still missing (e.g., both missing), fall back to 0
+    for (let i=0;i<counts.length;i++) if (counts[i]===null) counts[i]=0;
+
+    return {labels: expectedOrder, values: counts};
+  }
+
+  const genderNorm = normalize(DATA.gender, ["Female-headed households","Male-headed households"]);
+  const areaNorm   = normalize(DATA.area, ["Urban","Rural"]);
+
+  const trace1 = {
+    type:"pie",
+    labels: genderNorm.labels,
+    values: genderNorm.values,
+    name:"Gender",
+    domain: {row:0, column:0},
+    hole: 0.45,
+    textinfo: "percent",
+    hovertemplate: "%{label}<br>%{value} HHs<br>%{percent}<extra></extra>"
+  };
+
+  const trace2 = {
+    type:"pie",
+    labels: areaNorm.labels,
+    values: areaNorm.values,
+    name:"Area",
+    domain: {row:0, column:1},
+    hole: 0.45,
+    textinfo: "percent",
+    hovertemplate: "%{label}<br>%{value} HHs<br>%{percent}<extra></extra>"
+  };
+
+  const layout = {
+    margin: {l: 10, r: 10, t: 10, b: 10},
+    paper_bgcolor: "rgba(0,0,0,0)",
+    grid: {rows:1, columns:2},
+    showlegend: true,
+    legend: {orientation:"h", y:-0.08},
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: "#e8eefc"},
+    colorway: ["#026839", "#a09744", "#c32f33", "#0a6d3f", "#4a9960"]
+  };
+
+  Plotly.newPlot("profile", [trace1, trace2], layout, {displayModeBar:false, responsive:true});
+}
+
+
+function plotFinancial() {
+  const months = DATA.financial.months;
+  const series = DATA.financial.series;
+  const traces = series.map(name => {
+    return {
+      type:"bar",
+      name: name,
+      x: months,
+      y: DATA.financial.values[name]
+    }
+  });
+  const layout = {
+    barmode: "group",
+    margin: {l: 70, r: 20, t: 10, b: 45},
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    xaxis: {title:"Month", gridcolor:"rgba(255,255,255,.08)"},
+    yaxis: {title:"TRY", gridcolor:"rgba(255,255,255,.08)", tickformat: ",.0f"},
+    legend: {orientation:"h", y:-0.2},
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: "#e8eefc"},
+    colorway: ["#026839", "#a09744", "#c32f33", "#0a6d3f", "#4a9960"]
+  };
+  Plotly.newPlot("financial", traces, layout, {displayModeBar:false, responsive:true});
+}
+
+// CSV Data for Map
+let csvMapData = [];
+let filteredMapData = [];
+let filtersInitialized = false;
+
+async function loadCSVData() {
+  try {
+    console.log('Starting to load CSV file...');
+    const response = await fetch('CFS_Tracker_IHH_cleaned.csv');
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const text = await response.text();
+    console.log('CSV file loaded, length:', text.length);
+    const lines = text.split('\n');
+    console.log('Total lines:', lines.length);
+    
+    // Parse header (need to handle multi-line header)
+    const headerLine1 = parseCSVLine(lines[0]);
+    const headerLine2 = parseCSVLine(lines[1]);
+    const headerLine3 = parseCSVLine(lines[2]);
+    
+    // Find column indices based on CSV structure
+    // Row structure: #, Case ID(number), Case ID(code), Eng. Name, BNF's Name, ...
+    const rowNumIdx = 0;         // # column
+    const caseNumIdx = 1;        // Case ID number (0, 1, 5, 6...)
+    const caseIdColIdx = 2;      // Case ID code (HTY-KH-000, HTY-KH-001...)
+    const engNameIdx = 3;        // Engineer Name
+    const bnfIdx = 4;            // Beneficiary Name
+    const batchIdx = 5;          // Batch NO
+    const districtIdx = 6;       // District
+    const neighborhoodIdx = 7;   // Neighborhood
+    const urbanRuralIdx = 8;     // Urban/Rural
+    const gpsIdx = 9;            // GPS
+    const latIdx = 10;           // Latitude
+    const lonIdx = 11;           // Longitude
+    const mouIdIdx = 12;         // MOU ID
+    const mouSignIdx = 13;       // MOUs signature
+    const boqUsdIdx = 14;        // BoQ Amount (USD)
+    const boqTryIdx = 15;        // BoQ Amount (TL)
+    const firstInstallIdx = 16;  // 1st Installment
+    const secondInstallIdx = 17; // 2nd Installment
+    const statusIdx = 18;        // case status %
+    const paymentIdx = 19;       // 2nd payment
+    
+    csvMapData = [];
+    
+    // Parse data rows (skip first 4 lines: header + summary)
+    for (let i = 4; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      
+      const cols = parseCSVLine(line);
+      const lat = parseFloat(cols[latIdx]);
+      const lon = parseFloat(cols[lonIdx]);
+      
+      // Skip rows with invalid coordinates
+      if (isNaN(lat) || isNaN(lon) || lat === 0 || lon === 0) continue;
+      
+      csvMapData.push({
+        lat: lat,
+        lon: lon,
+        rowNum: cols[rowNumIdx] || '',
+        caseNum: cols[caseNumIdx] || '',
+        caseId: cols[caseIdColIdx] || '',
+        engName: cols[engNameIdx] || '',
+        bnfName: cols[bnfIdx] || '',
+        batch: cols[batchIdx] || '',
+        district: cols[districtIdx] || '',
+        neighborhood: cols[neighborhoodIdx] || '',
+        urbanRural: cols[urbanRuralIdx] || '',
+        gps: cols[gpsIdx] || '',
+        mouId: cols[mouIdIdx] || '',
+        mouSign: cols[mouSignIdx] || '',
+        boqUsd: cols[boqUsdIdx] || '',
+        boqTry: cols[boqTryIdx] || '',
+        firstInstall: cols[firstInstallIdx] || '',
+        secondInstall: cols[secondInstallIdx] || '',
+        status: cols[statusIdx] || '',
+        payment: cols[paymentIdx] || ''
+      });
+    }
+    
+    console.log(`✓ Successfully loaded ${csvMapData.length} locations from CSV`);
+    console.log('Sample data:', csvMapData.slice(0, 3));
+    
+    if (csvMapData.length === 0) {
+      console.warn('No valid GPS coordinates found in CSV');
+      plotMapFallback();
+    } else {
+      filteredMapData = [...csvMapData]; // Initialize filtered data
+      initializeFilters();
+      plotMap();
+    }
+  } catch (error) {
+    console.error('❌ Error loading CSV:', error);
+    console.error('Error details:', error.message);
+    // Fallback to original data
+    plotMapFallback();
+  }
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
+function getStatusColor(status) {
+  const s = parseInt(status) || 0;
+  if (s >= 100) return '#026839'; // Green - completed
+  if (s >= 80) return '#a09744';  // Yellow - near completion
+  if (s > 0) return '#c32f33';    // Red - in progress
+  return '#666666';               // Gray - no status
+}
+
+// Filter Functions
+function toggleFilters() {
+  const filters = document.getElementById('mapFilters');
+  filters.classList.toggle('filters-collapsed');
+}
+
+function initializeFilters() {
+  if (filtersInitialized) return;
+  
+  console.log('Initializing filters...');
+  
+  // Get unique values for dropdowns
+  const districts = [...new Set(csvMapData.map(r => r.district).filter(Boolean))].sort();
+  const neighborhoods = [...new Set(csvMapData.map(r => r.neighborhood).filter(Boolean))].sort();
+  const engineers = [...new Set(csvMapData.map(r => r.engName).filter(Boolean))].sort();
+  const batches = [...new Set(csvMapData.map(r => r.batch).filter(Boolean))].sort((a,b) => a-b);
+  
+  // Populate District dropdown
+  const districtSelect = document.getElementById('filterDistrict');
+  districts.forEach(d => {
+    const option = document.createElement('option');
+    option.value = d;
+    option.textContent = d;
+    districtSelect.appendChild(option);
+  });
+  
+  // Populate Neighborhood dropdown
+  const neighborhoodSelect = document.getElementById('filterNeighborhood');
+  neighborhoods.forEach(n => {
+    const option = document.createElement('option');
+    option.value = n;
+    option.textContent = n;
+    neighborhoodSelect.appendChild(option);
+  });
+  
+  // Populate Engineer dropdown
+  const engineerSelect = document.getElementById('filterEngineer');
+  engineers.forEach(e => {
+    const option = document.createElement('option');
+    option.value = e;
+    option.textContent = e;
+    engineerSelect.appendChild(option);
+  });
+  
+  // Populate Batch dropdown
+  const batchSelect = document.getElementById('filterBatch');
+  batches.forEach(b => {
+    const option = document.createElement('option');
+    option.value = b;
+    option.textContent = `Batch ${b}`;
+    batchSelect.appendChild(option);
+  });
+  
+  // Set initial stats
+  document.getElementById('totalCount').textContent = csvMapData.length;
+  document.getElementById('visibleCount').textContent = csvMapData.length;
+  
+  filtersInitialized = true;
+  console.log('✓ Filters initialized');
+}
+
+
+function parseBoqValue(boqStr) {
+  if (!boqStr) return 0;
+  // Remove $ and commas, then parse
+  const cleaned = boqStr.replace(/[\$,]/g, '').trim();
+  return parseFloat(cleaned) || 0;
+}
+
+function validateRangeInputs() {
+  // Validate BoQ Amount
+  const boqMin = parseInt(document.getElementById('filterBoqMin').value) || 0;
+  const boqMax = parseInt(document.getElementById('filterBoqMax').value) || 3000;
+  if (boqMin > boqMax) {
+    document.getElementById('filterBoqMin').value = boqMax;
+  }
+  if (boqMax < boqMin) {
+    document.getElementById('filterBoqMax').value = boqMin;
+  }
+  
+  // Validate Status
+  const statusMin = parseInt(document.getElementById('filterStatusMin').value) || 0;
+  const statusMax = parseInt(document.getElementById('filterStatusMax').value) || 250;
+  if (statusMin > statusMax) {
+    document.getElementById('filterStatusMin').value = statusMax;
+  }
+  if (statusMax < statusMin) {
+    document.getElementById('filterStatusMax').value = statusMin;
+  }
+  
+  // Validate 1st Installment
+  const install1Min = parseInt(document.getElementById('filter1stInstallMin').value) || 0;
+  const install1Max = parseInt(document.getElementById('filter1stInstallMax').value) || 2000;
+  if (install1Min > install1Max) {
+    document.getElementById('filter1stInstallMin').value = install1Max;
+  }
+  if (install1Max < install1Min) {
+    document.getElementById('filter1stInstallMax').value = install1Min;
+  }
+}
+
+function applyFilters() {
+  console.log('Applying filters...');
+  
+  // Validate range inputs first
+  validateRangeInputs();
+  
+  // Get filter values
+  const district = document.getElementById('filterDistrict').value;
+  const neighborhood = document.getElementById('filterNeighborhood').value;
+  const engineer = document.getElementById('filterEngineer').value;
+  const batch = document.getElementById('filterBatch').value;
+  const urban = document.getElementById('filterUrban').checked;
+  const rural = document.getElementById('filterRural').checked;
+  const payment2nd = document.getElementById('filter2ndPayment').value;
+  const mouSigned = document.getElementById('filterMOU').value;
+  const searchText = document.getElementById('filterSearch').value.toLowerCase();
+  const boqMin = parseInt(document.getElementById('filterBoqMin').value) || 0;
+  const boqMax = parseInt(document.getElementById('filterBoqMax').value) || 3000;
+  const statusMin = parseInt(document.getElementById('filterStatusMin').value) || 0;
+  const statusMax = parseInt(document.getElementById('filterStatusMax').value) || 250;
+  const install1Min = parseInt(document.getElementById('filter1stInstallMin').value) || 0;
+  const install1Max = parseInt(document.getElementById('filter1stInstallMax').value) || 2000;
+  
+  // Apply filters
+  filteredMapData = csvMapData.filter(record => {
+    // District filter
+    if (district && record.district !== district) return false;
+    
+    // Neighborhood filter
+    if (neighborhood && record.neighborhood !== neighborhood) return false;
+    
+    // Engineer filter
+    if (engineer && record.engName !== engineer) return false;
+    
+    // Batch filter
+    if (batch && record.batch !== batch) return false;
+    
+    // Urban/Rural filter
+    const areaType = record.urbanRural?.toUpperCase();
+    if (!urban && areaType === 'URBAN') return false;
+    if (!rural && areaType === 'RURAL') return false;
+    
+    // 2nd Payment filter
+    if (payment2nd && record.payment !== payment2nd) return false;
+    
+    // MOU Signed filter
+    if (mouSigned && record.mouSign !== mouSigned) return false;
+    
+    // Search filter (Case ID or Beneficiary name)
+    if (searchText) {
+      const matchCaseId = record.caseId?.toLowerCase().includes(searchText);
+      const matchBnf = record.bnfName?.toLowerCase().includes(searchText);
+      if (!matchCaseId && !matchBnf) return false;
+    }
+    
+    // BoQ Amount filter
+    const boqValue = parseBoqValue(record.boqUsd);
+    if (boqValue < boqMin || boqValue > boqMax) return false;
+    
+    // Status filter
+    const statusValue = parseInt(record.status) || 0;
+    if (statusValue < statusMin || statusValue > statusMax) return false;
+    
+    // 1st Installment filter
+    const install1Value = parseBoqValue(record.firstInstall);
+    if (install1Value < install1Min || install1Value > install1Max) return false;
+    
+    return true;
+  });
+  
+  console.log(`✓ Filtered: ${filteredMapData.length} of ${csvMapData.length} records`);
+  
+  // Update stats
+  document.getElementById('visibleCount').textContent = filteredMapData.length;
+  
+  // Count active filters
+  let activeFilters = 0;
+  if (district) activeFilters++;
+  if (neighborhood) activeFilters++;
+  if (engineer) activeFilters++;
+  if (batch) activeFilters++;
+  if (!urban || !rural) activeFilters++;
+  if (payment2nd) activeFilters++;
+  if (mouSigned) activeFilters++;
+  if (searchText) activeFilters++;
+  if (boqMin > 0 || boqMax < 3000) activeFilters++;
+  if (statusMin > 0 || statusMax < 250) activeFilters++;
+  if (install1Min > 0 || install1Max < 2000) activeFilters++;
+  
+  const filterCountEl = document.getElementById('activeFilterCount');
+  if (activeFilters > 0) {
+    filterCountEl.textContent = activeFilters + ' active';
+    filterCountEl.style.display = 'inline-block';
+  } else {
+    filterCountEl.style.display = 'none';
+  }
+  
+  // Re-render map
+  plotMap();
+}
+
+function clearFilters() {
+  console.log('Clearing all filters...');
+  
+  // Reset all filter inputs
+  document.getElementById('filterDistrict').value = '';
+  document.getElementById('filterNeighborhood').value = '';
+  document.getElementById('filterEngineer').value = '';
+  document.getElementById('filterBatch').value = '';
+  document.getElementById('filterUrban').checked = true;
+  document.getElementById('filterRural').checked = true;
+  document.getElementById('filter2ndPayment').value = '';
+  document.getElementById('filterMOU').value = '';
+  document.getElementById('filterSearch').value = '';
+  document.getElementById('filterBoqMin').value = 0;
+  document.getElementById('filterBoqMax').value = 3000;
+  document.getElementById('filterStatusMin').value = 0;
+  document.getElementById('filterStatusMax').value = 250;
+  document.getElementById('filter1stInstallMin').value = 0;
+  document.getElementById('filter1stInstallMax').value = 2000;
+  
+  // Reset filtered data
+  filteredMapData = [...csvMapData];
+  
+  // Hide active filter count
+  document.getElementById('activeFilterCount').style.display = 'none';
+  
+  // Update stats
+  document.getElementById('visibleCount').textContent = csvMapData.length;
+  
+  // Re-render map
+  plotMap();
+  
+  console.log('✓ Filters cleared');
+}
+
+function plotMap() {
+  console.log('plotMap called with', filteredMapData.length, 'filtered data points (', csvMapData.length, 'total)');
+  
+  if (csvMapData.length === 0) {
+    console.warn('No CSV data available, using fallback');
+    plotMapFallback();
+    return;
+  }
+  
+  if (filteredMapData.length === 0) {
+    console.warn('No data matches current filters');
+    // Show empty map message
+    const mapEl = document.getElementById('map');
+    mapEl.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px;">No locations match the current filters. Try adjusting your filter criteria.</div>';
+    return;
+  }
+  
+  const colors = getPlotlyColors();
+  
+  // Group data by status for legend
+  const completed = filteredMapData.filter(r => parseInt(r.status) >= 100);
+  const inProgress = filteredMapData.filter(r => parseInt(r.status) > 0 && parseInt(r.status) < 100);
+  const noStatus = filteredMapData.filter(r => !r.status || parseInt(r.status) === 0);
+  
+  const createTrace = (data, name, color, symbol) => ({
+    type: "scattermapbox",
+    name: name,
+    lat: data.map(r => r.lat),
+    lon: data.map(r => r.lon),
+    text: data.map(r => r.caseId),
+    customdata: data.map(r => [
+      r.rowNum,
+      r.caseNum,
+      r.engName, 
+      r.bnfName, 
+      r.batch,
+      r.district, 
+      r.neighborhood, 
+      r.urbanRural, 
+      r.gps,
+      r.mouId,
+      r.mouSign,
+      r.boqUsd,
+      r.boqTry,
+      r.firstInstall,
+      r.secondInstall,
+      r.status, 
+      r.payment
+    ]),
+    hovertemplate: 
+      '<b style="font-size:14px">%{text}</b><br>' +
+      '<b>Case #:</b> %{customdata[1]}<br>' +
+      '<b>Row #:</b> %{customdata[0]}<br>' +
+      '━━━━━━━━━━━━━━━━━━━<br>' +
+      '<b>Beneficiary:</b> %{customdata[3]}<br>' +
+      '<b>Engineer:</b> %{customdata[2]}<br>' +
+      '<b>Batch:</b> %{customdata[4]}<br>' +
+      '━━━━━━━━━━━━━━━━━━━<br>' +
+      '<b>District:</b> %{customdata[5]}<br>' +
+      '<b>Neighborhood:</b> %{customdata[6]}<br>' +
+      '<b>Type:</b> %{customdata[7]}<br>' +
+      '<b>GPS:</b> %{customdata[8]}<br>' +
+      '━━━━━━━━━━━━━━━━━━━<br>' +
+      '<b>MOU ID:</b> %{customdata[9]}<br>' +
+      '<b>MOU Signed:</b> %{customdata[10]}<br>' +
+      '<b>BoQ Amount:</b> %{customdata[11]} / %{customdata[12]}<br>' +
+      '<b>1st Installment:</b> %{customdata[13]}<br>' +
+      '<b>2nd Installment:</b> %{customdata[14]}<br>' +
+      '━━━━━━━━━━━━━━━━━━━<br>' +
+      '<b>Completion Status:</b> %{customdata[15]}%<br>' +
+      '<b>2nd Payment Status:</b> %{customdata[16]}' +
+      '<extra></extra>',
+    mode: "markers",
+    marker: {
+      size: 10,
+      color: color,
+      opacity: 0.85
+    }
+  });
+  
+  const traces = [];
+  if (completed.length > 0) {
+    traces.push(createTrace(completed, `Completed 100%+ (${completed.length})`, '#026839', 'circle'));
+  }
+  if (inProgress.length > 0) {
+    traces.push(createTrace(inProgress, `In Progress (${inProgress.length})`, '#c32f33', 'circle'));
+  }
+  if (noStatus.length > 0) {
+    traces.push(createTrace(noStatus, `No Status (${noStatus.length})`, '#666666', 'circle'));
+  }
+  
+  // Calculate center from filtered data
+  const avgLat = filteredMapData.reduce((sum, r) => sum + r.lat, 0) / filteredMapData.length;
+  const avgLon = filteredMapData.reduce((sum, r) => sum + r.lon, 0) / filteredMapData.length;
+  
+  const layout = {
+    margin: {l: 0, r: 0, t: 0, b: 0},
+    mapbox: {
+      style: "open-street-map",
+      center: {lat: avgLat, lon: avgLon},
+      zoom: 10
+    },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    font: {family: "Calibri, Arial, sans-serif", size: 11, color: colors.fontColor},
+    legend: {
+      orientation: "h",
+      y: 1.02,
+      x: 0.5,
+      xanchor: "center",
+      bgcolor: "rgba(0,0,0,0.5)",
+      font: {color: "#fff", size: 11}
+    },
+    showlegend: true
+  };
+  
+  console.log('Rendering map with', traces.length, 'traces');
+  traces.forEach((trace, i) => {
+    console.log(`Trace ${i}: ${trace.name} - ${trace.lat.length} points`);
+  });
+  
+  // Hide loading message
+  const loadingEl = document.getElementById('mapLoading');
+  if (loadingEl) loadingEl.style.display = 'none';
+  
+  // Update marker count
+  const countEl = document.getElementById('mapCount');
+  if (countEl) {
+    if (filteredMapData.length === csvMapData.length) {
+      countEl.textContent = `(${csvMapData.length} locations)`;
+    } else {
+      countEl.textContent = `(${filteredMapData.length} of ${csvMapData.length} locations)`;
+    }
+  }
+  
+  Plotly.newPlot("map", traces, layout, {displayModeBar: true, responsive: true, scrollZoom: true})
+    .then(() => console.log('✓ Map rendered successfully'))
+    .catch(err => console.error('❌ Map rendering error:', err));
+}
+
+function plotMapFallback() {
+  console.log('Using fallback map data');
+  
+  // Hide loading message
+  const loadingEl = document.getElementById('mapLoading');
+  if (loadingEl) {
+    loadingEl.innerHTML = '<div style="text-align: center;"><div>⚠️ Could not load CSV file</div><div style="font-size: 12px; margin-top: 8px;">Showing district-level summary instead</div></div>';
+    setTimeout(() => {
+      if (loadingEl) loadingEl.style.display = 'none';
+    }, 3000);
+  }
+  
+  const rows = DATA.map;
+  const colors = getPlotlyColors();
+  const trace = {
+    type: "scattermapbox",
+    name: "Districts",
+    lat: rows.map(r => r.Latitude),
+    lon: rows.map(r => r.Longitude),
+    text: rows.map(r => `${r.District}<br>Households: ${r.Households}<br>Completion: ${r["Completion %"]}%`),
+    mode: "markers",
+    marker: {size: 18, color: "#026839"}
+  };
+  const layout = {
+    margin: {l: 10, r: 10, t: 10, b: 10},
+    mapbox: {
+      style: "open-street-map",
+      center: {lat: 36.2, lon: 36.3},
+      zoom: 7
+    },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    font: {family: "Calibri, Arial, sans-serif", size: 12, color: colors.fontColor}
+  };
+  
+  // Update count
+  const countEl = document.getElementById('mapCount');
+  if (countEl) countEl.textContent = `(District Summary - ${rows.length} locations)`;
+  
+  Plotly.newPlot("map", [trace], layout, {displayModeBar: false, responsive: true})
+    .then(() => console.log('✓ Fallback map rendered'))
+    .catch(err => console.error('❌ Fallback map error:', err));
+}
+
+// Theme management
+function getTheme() {
+  return document.documentElement.getAttribute('data-theme') || 'dark';
+}
+
+function getPlotlyColors() {
+  const isDark = getTheme() === 'dark';
+  return {
+    fontColor: isDark ? '#e8eefc' : '#1a1a2e',
+    gridColor: isDark ? 'rgba(255,255,255,.08)' : 'rgba(0,0,0,.08)',
+    paperBg: 'rgba(0,0,0,0)',
+    plotBg: 'rgba(0,0,0,0)'
+  };
+}
+
+function updateAllPlots() {
+  const colors = getPlotlyColors();
+  const updateLayout = {
+    'font.color': colors.fontColor,
+    'xaxis.gridcolor': colors.gridColor,
+    'yaxis.gridcolor': colors.gridColor,
+    'paper_bgcolor': colors.paperBg,
+    'plot_bgcolor': colors.plotBg
+  };
+  
+  // Update standard plots
+  ['funnel', 'monthly', 'districtBar', 'profile', 'financial'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.data) {
+      Plotly.relayout(id, updateLayout);
+    }
+  });
+  
+  // Update map with theme-aware legend
+  const mapEl = document.getElementById('map');
+  if (mapEl && mapEl.data) {
+    const isDark = getTheme() === 'dark';
+    Plotly.relayout('map', {
+      'font.color': colors.fontColor,
+      'paper_bgcolor': colors.paperBg,
+      'legend.bgcolor': isDark ? 'rgba(0,0,0,0.5)' : 'rgba(255,255,255,0.8)',
+      'legend.font.color': isDark ? '#fff' : '#333'
+    });
+  }
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme') || 'dark';
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  // Update Plotly charts
+  updateAllPlots();
+}
+
+// Map expand/collapse toggle
+function toggleMap() {
+  const body = document.body;
+  const isExpanded = body.classList.toggle('map-expanded');
+  
+  // Resize the map plot after expansion/collapse
+  setTimeout(() => {
+    const mapEl = document.getElementById('map');
+    if (mapEl) {
+      Plotly.Plots.resize(mapEl);
+    }
+  }, 450); // Wait for CSS transition to complete
+  
+  // Handle escape key to close
+  if (isExpanded) {
+    document.addEventListener('keydown', handleMapEscape);
+  } else {
+    document.removeEventListener('keydown', handleMapEscape);
+  }
+}
+
+function handleMapEscape(e) {
+  if (e.key === 'Escape' && document.body.classList.contains('map-expanded')) {
+    toggleMap();
+  }
+}
+
+// Initialize theme from localStorage or system preference
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else {
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+  }
+}
+
+// Initialize theme before rendering
+initTheme();
+
+buildKPIs();
+plotFunnel();
+plotMonthly();
+plotDistrict();
+plotProfile();
+plotFinancial();
+
+// Load CSV data and render map
+loadCSVData();
+
+// Update plots after initial render to match theme
+setTimeout(updateAllPlots, 100);
+</script>
+<section class="card col-12 map-section" id="mapSection">
+        <h2>
+          Interactive Beneficiary Map <span id="mapCount" style="font-size: 13px; font-weight: normal; color: var(--muted);"></span>
+          <button class="close-map" onclick="toggleMap()" title="Close map">
+            <span>✕</span> Close
+          </button>
+        </h2>
+        
+        <!-- Map Filters -->
+        <div class="map-filters" id="mapFilters">
+          <div class="filter-header" onclick="toggleFilters()">
+            <h3>
+              <span>🔍</span>
+              <span>Filter & Search</span>
+              <span id="activeFilterCount" style="font-size: 11px; background: #026839; padding: 2px 8px; border-radius: 10px; font-weight: normal;"></span>
+            </h3>
+            <span class="filter-toggle">▼</span>
+          </div>
+          
+          <div class="filter-content" id="filterContent">
+            <!-- District Filter -->
+            <div class="filter-group">
+              <label>District</label>
+              <select id="filterDistrict" onchange="applyFilters()">
+                <option value="">All Districts</option>
+              </select>
+            </div>
+            
+            <!-- Neighborhood Filter -->
+            <div class="filter-group">
+              <label>Neighborhood</label>
+              <select id="filterNeighborhood" onchange="applyFilters()">
+                <option value="">All Neighborhoods</option>
+              </select>
+            </div>
+            
+            <!-- Engineer Filter -->
+            <div class="filter-group">
+              <label>Engineer Name</label>
+              <select id="filterEngineer" onchange="applyFilters()">
+                <option value="">All Engineers</option>
+              </select>
+            </div>
+            
+            <!-- Batch Filter -->
+            <div class="filter-group">
+              <label>Batch Number</label>
+              <select id="filterBatch" onchange="applyFilters()">
+                <option value="">All Batches</option>
+              </select>
+            </div>
+            
+            <!-- Urban/Rural Filter -->
+            <div class="filter-group">
+              <label>Area Type</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item">
+                  <input type="checkbox" id="filterUrban" value="URBAN" checked onchange="applyFilters()">
+                  <span>Urban</span>
+                </label>
+                <label class="checkbox-item">
+                  <input type="checkbox" id="filterRural" value="RURAL" checked onchange="applyFilters()">
+                  <span>Rural</span>
+                </label>
+              </div>
+            </div>
+            
+            <!-- 2nd Payment Status Filter -->
+            <div class="filter-group">
+              <label>2nd Payment Status</label>
+              <select id="filter2ndPayment" onchange="applyFilters()">
+                <option value="">All Status</option>
+                <option value="Done">Done</option>
+                <option value="done">done</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+            
+            <!-- MOU Signed Filter -->
+            <div class="filter-group">
+              <label>MOU Signed</label>
+              <select id="filterMOU" onchange="applyFilters()">
+                <option value="">All</option>
+                <option value="Yes">Yes</option>
+                <option value="yes">yes</option>
+              </select>
+            </div>
+            
+            <!-- Case Search -->
+            <div class="filter-group">
+              <label>Search Case ID / Beneficiary</label>
+              <input type="text" id="filterSearch" placeholder="Type to search..." oninput="applyFilters()">
+            </div>
+            
+            <!-- BoQ Amount (USD) Range -->
+            <div class="filter-group">
+              <label>BoQ Amount (USD)</label>
+              <div class="range-inputs">
+                <div class="range-input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="filterBoqMin" placeholder="Min" min="0" max="3000" value="0" onchange="applyFilters()">
+                </div>
+                <span class="range-separator">-</span>
+                <div class="range-input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="filterBoqMax" placeholder="Max" min="0" max="3000" value="3000" onchange="applyFilters()">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Completion Status Range -->
+            <div class="filter-group">
+              <label>Completion Status (%)</label>
+              <div class="range-inputs">
+                <div class="range-input-wrapper">
+                  <input type="number" id="filterStatusMin" placeholder="Min %" min="0" max="250" value="0" onchange="applyFilters()">
+                  <span class="input-suffix">%</span>
+                </div>
+                <span class="range-separator">-</span>
+                <div class="range-input-wrapper">
+                  <input type="number" id="filterStatusMax" placeholder="Max %" min="0" max="250" value="250" onchange="applyFilters()">
+                  <span class="input-suffix">%</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 1st Installment Range -->
+            <div class="filter-group">
+              <label>1st Installment (USD)</label>
+              <div class="range-inputs">
+                <div class="range-input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="filter1stInstallMin" placeholder="Min" min="0" max="2000" value="0" onchange="applyFilters()">
+                </div>
+                <span class="range-separator">-</span>
+                <div class="range-input-wrapper">
+                  <span class="input-prefix">$</span>
+                  <input type="number" id="filter1stInstallMax" placeholder="Max" min="0" max="2000" value="2000" onchange="applyFilters()">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Filter Actions -->
+            <div class="filter-group" style="grid-column: 1 / -1;">
+              <div class="filter-actions">
+                <button class="filter-btn" onclick="applyFilters()">
+                  Apply Filters
+                </button>
+                <button class="filter-btn clear" onclick="clearFilters()">
+                  Clear All
+                </button>
+              </div>
+              <div class="filter-stats" id="filterStats">
+                Showing <strong id="visibleCount">0</strong> of <strong id="totalCount">0</strong> locations
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="map" class="plot tall">
+          <div id="mapLoading" style="display: flex; align-items: center; justify-content: center; height: 100%; color: var(--muted); font-size: 14px;">
+            Loading map data from CSV...
+          </div>
+        </div>
+        <p class="note">Interactive map showing all beneficiary locations from the project dataset. Hover over markers for details. Use scroll to zoom, drag to pan. Green = Completed (100%+), Red = In Progress, Gray = No Status.</p>
+      </section>
+</body>
+</html>

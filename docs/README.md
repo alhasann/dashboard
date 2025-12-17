@@ -1,0 +1,162 @@
+# Cash for Shelter Dashboard - Hatay, Türkiye
+
+An interactive web dashboard for visualizing and analyzing the Cash for Shelter project data in Hatay, Türkiye following the 2023 earthquake.
+
+## 🌟 Features
+
+### 📊 **Data Visualization**
+- **Interactive Charts** - Plotly-based charts for project overview, timeline, geographic coverage, and financial disbursements
+- **KPI Metrics** - Real-time display of key performance indicators
+- **Success Stories** - Human impact narratives with completion statistics
+
+### 🗺️ **Interactive Map**
+- **387 Beneficiary Locations** - GPS-based markers for all project beneficiaries
+- **Smart Filtering** - Filter by district, neighborhood, engineer, batch, status, and more
+- **Detailed Hover Information** - View complete case details on marker hover
+- **Color-Coded Status** - Green (Completed 100%+), Red (In Progress), Gray (No Status)
+- **Fullscreen Mode** - Expand map to fullscreen for detailed exploration
+
+### 🔍 **Advanced Filters**
+- District & Neighborhood selection
+- Engineer name filtering
+- Batch number filtering
+- Urban/Rural area type
+- 2nd Payment status
+- MOU signed status
+- Case ID / Beneficiary name search
+- BoQ Amount range ($0 - $3,000)
+- Completion Status range (0% - 250%)
+- 1st Installment range ($0 - $2,000)
+
+### 🎨 **Theme Support**
+- **Dark Mode** (default) - Professional dark theme
+- **Light Mode** - Clean light theme
+- **Toggle Button** - Easy theme switching with persistent preference
+
+### 📱 **Responsive Design**
+- Mobile-friendly layout
+- Adaptive charts and maps
+- Print-optimized styles
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Modern web browser (Chrome, Firefox, Safari, Edge)
+- Local web server (Python, Node.js, or VS Code Live Server)
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone git@github.com:alhasann/dashboard.git
+   cd dashboard
+   ```
+
+2. **Start a local web server**
+
+   **Option A: Using Python**
+   ```bash
+   python -m http.server 8000
+   ```
+
+   **Option B: Using Node.js**
+   ```bash
+   npx http-server -p 8000
+   ```
+
+   **Option C: Using VS Code**
+   - Install "Live Server" extension
+   - Right-click `CFS_Map_Dashboard.html` → "Open with Live Server"
+
+3. **Open in browser**
+   ```
+   http://localhost:8000/CFS_Map_Dashboard.html
+   ```
+
+## 📁 Project Structure
+
+```
+dashboard/
+├── CFS_Map_Dashboard.html       # Main dashboard file
+├── CFS_Tracker_IHH_cleaned.csv  # Project data (387 beneficiaries)
+├── images/
+│   └── login_logo.svg           # IHH Humanitarian Relief Foundation logo
+├── ignore_deployment/           # Deployment scripts (not tracked)
+│   └── clean_gps.py            # GPS data cleaning script
+├── .gitignore                   # Git ignore rules
+├── serve_dashboard.bat          # Quick server start script (Windows)
+└── README.md                    # This file
+```
+
+## 📊 Data Overview
+
+- **Total Beneficiaries:** 386 supported households
+- **Geographic Coverage:** Kırıkhan (303) and Antakya (83) districts
+- **Completion Rate:** 92.7% (358 households at 100%+)
+- **2nd Installment Coverage:** 98.2% (379 households)
+- **Project Timeline:** February - November 2024
+- **Digital Innovation:** 100% digital case management
+
+## 🛠️ Technology Stack
+
+- **Frontend:** HTML5, CSS3, JavaScript (ES6+)
+- **Visualization:** Plotly.js 2.30.0
+- **Mapping:** OpenStreetMap + Plotly Mapbox
+- **Data Format:** CSV
+- **Styling:** CSS Variables (theme support)
+
+## 🎯 Key Sections
+
+1. **Project Overview** - KPIs and derived indicators
+2. **Implementation Flow** - Funnel chart showing project pipeline
+3. **Monthly Progress** - Timeline of operational milestones
+4. **Geographic Coverage** - District-wise distribution
+5. **Beneficiary Profile** - Gender and area type breakdown
+6. **Financial Disbursements** - Monthly cash transfers
+7. **Interactive Map** - All beneficiary locations with advanced filtering
+8. **Success Stories** - Human impact narratives
+9. **Digital Innovation** - Case management system metrics
+
+## 🎨 Theme Colors
+
+### Dark Mode (Default)
+- Primary: `#026839` (IHH Green)
+- Background: `#0b1220`
+- Cards: `#111a2e`
+- Text: `#e8eefc`
+
+### Light Mode
+- Primary: `#026839` (IHH Green)
+- Background: `#f4f6fa`
+- Cards: `#ffffff`
+- Text: `#1a1a2e`
+
+## 🔄 Updating Data
+
+To update the dashboard with new data:
+
+1. Update `CFS_Tracker_IHH_cleaned.csv` with new records
+2. Ensure GPS coordinates are in the format: `Latitude, Longitude`
+3. Refresh the dashboard - data loads automatically from CSV
+
+## 📝 License
+
+This project is proprietary to IHH Humanitarian Relief Foundation.
+
+## 👥 Credits
+
+**Organization:** IHH Humanitarian Relief Foundation  
+**Project:** Cash for Shelter - Hatay Earthquake Response  
+**Dashboard Development:** 2025  
+**Data Source:** Project Excel records (aligned with official dataset)
+
+## 📧 Contact
+
+For questions or support regarding this dashboard, please contact the IHH Humanitarian Relief Foundation project team.
+
+---
+
+**Generated:** December 2025  
+**Project Location:** Hatay, Türkiye  
+**Beneficiaries Served:** 386 households  
+**Total Locations Mapped:** 387 GPS coordinates

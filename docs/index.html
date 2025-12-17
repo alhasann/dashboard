@@ -551,9 +551,160 @@
       .theme-toggle, .map-toggle, .close-map { display: none !important; }
       .logos img { filter: none !important; }
     }
+
+    /* Password Protection Overlay */
+    #password-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0b1220 0%, #1a2744 100%);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    #password-overlay.hidden {
+      display: none;
+    }
+    .login-container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      animation: slideUp 0.4s ease;
+    }
+    .login-container .logo-section {
+      margin-bottom: 32px;
+    }
+    .login-container .logo-section img {
+      height: 80px;
+      filter: brightness(0) invert(1) drop-shadow(0 4px 12px rgba(2,104,57,.4));
+    }
+    .login-container h2 {
+      margin: 0 0 12px 0;
+      font-size: 26px;
+      color: #e8eefc;
+      font-weight: 600;
+    }
+    .login-container p {
+      margin: 0 0 32px 0;
+      color: #b7c3e6;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .login-form input {
+      padding: 14px 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      font-size: 16px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .login-form input:focus {
+      border-color: #026839;
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 0 0 3px rgba(2,104,57,.15);
+    }
+    .login-form input::placeholder {
+      color: #6b7897;
+    }
+    .login-form button {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #026839 0%, #03804a 100%);
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(2,104,57,.3);
+    }
+    .login-form button:hover {
+      background: linear-gradient(135deg, #03804a 0%, #026839 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2,104,57,.4);
+    }
+    .login-form button:active {
+      transform: translateY(0);
+    }
+    .error-message {
+      color: #ff6b6b;
+      font-size: 14px;
+      margin-top: -8px;
+      display: none;
+      animation: shake 0.4s ease;
+    }
+    .error-message.show {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
   </style>
 </head>
 <body>
+  <!-- Password Protection Overlay -->
+  <div id="password-overlay">
+    <div class="login-container">
+      <div class="logo-section">
+        <img src="images/login_logo.svg" alt="IHH Logo">
+      </div>
+      <h2>Dashboard Access</h2>
+      <p>This dashboard contains sensitive project information.<br>Please enter the password to continue.</p>
+      <form class="login-form" onsubmit="checkPassword(event)">
+        <input 
+          type="password" 
+          id="password-input" 
+          placeholder="Enter password" 
+          autocomplete="off"
+          autofocus
+          required
+        />
+        <button type="submit">Unlock Dashboard</button>
+        <div class="error-message" id="error-message">
+          ❌ Incorrect password. Please try again.
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="container">
     <header>
       <div class="logos">
@@ -696,6 +847,62 @@ Digital Innovation (Case Management App)
   </div>
 
 <script>
+// ========================================
+// PASSWORD PROTECTION
+// ========================================
+const CORRECT_PASSWORD = "2223";
+
+// Check if user is already authenticated
+window.addEventListener('DOMContentLoaded', function() {
+  const isAuthenticated = sessionStorage.getItem('dashboard_authenticated');
+  if (isAuthenticated === 'true') {
+    hidePasswordOverlay();
+  }
+});
+
+function checkPassword(event) {
+  event.preventDefault();
+  
+  const passwordInput = document.getElementById('password-input');
+  const errorMessage = document.getElementById('error-message');
+  const enteredPassword = passwordInput.value;
+  
+  if (enteredPassword === CORRECT_PASSWORD) {
+    // Correct password - grant access
+    sessionStorage.setItem('dashboard_authenticated', 'true');
+    hidePasswordOverlay();
+    errorMessage.classList.remove('show');
+  } else {
+    // Incorrect password - show error
+    errorMessage.classList.add('show');
+    passwordInput.value = '';
+    passwordInput.focus();
+    
+    // Shake animation on the input
+    passwordInput.style.animation = 'shake 0.4s ease';
+    setTimeout(() => {
+      passwordInput.style.animation = '';
+    }, 400);
+  }
+}
+
+function hidePasswordOverlay() {
+  const overlay = document.getElementById('password-overlay');
+  overlay.style.animation = 'fadeOut 0.3s ease';
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+  }, 300);
+}
+
+// Clear authentication on window close (optional - can be removed if you want it to persist)
+window.addEventListener('beforeunload', function() {
+  // Uncomment the line below if you want users to re-enter password on every new session
+  // sessionStorage.removeItem('dashboard_authenticated');
+});
+
+// ========================================
+// DATA AND DASHBOARD
+// ========================================
 const DATA = {"kpis": {"household_surveys": 775, "supported_households": 386, "mous_signed": 387, "first_installments": 387, "second_installments": 379, "completed_100_plus": 358, "replaced_cases": 6, "cancelled_returned": 1}, "derived": {"second_installment_rate": 98.2, "completion_rate": 92.7}, "months": ["Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"], "timeline": {"surveys": [10, 305, 112, 25, 139, 116, 48, 6, 14, 0], "boq": [0, 1, 25, 106, 69, 157, 0, 20, 12, 0], "mou": [0, 0, 22, 77, 100, 100, 75, 1, 12, 0], "first": [0, 0, 0, 96, 100, 99, 76, 4, 10, 2], "second": [0, 0, 0, 0, 0, 0, 66, 54, 230, 29]}, "funnel": {"labels": ["Surveys", "BoQs", "MoUs", "1st Payment", "2nd Payment"], "values": [775, 390, 387, 387, 379]}, "district": [{"District": "Antakya", "BNFs": 83, "%": 0.22}, {"District": "K\u0131r\u0131khan", "BNFs": 303, "%": 0.78}], "gender": [{"Category": "Male-headed households", "Count": 197, "Share": 0.51}], "area": [{"Category": "Rural", "Count": 134, "Share": 0.35}], "financial": {"months": ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov"], "series": ["1st paymet in TL", "2nd paymet in TL"], "values": {"1st paymet in TL": [2151695.0, 2305589.0, 2331028.0, 2171522.0, 107655.0, 198670.0, 55705.0], "2nd paymet in TL": [0.0, 0.0, 0.0, 1390151.0, 1218472.5, 4966723.5, 650885.5]}}, "map": [{"District": "K\u0131r\u0131khan", "Latitude": 36.497, "Longitude": 36.357, "Households": 303, "Completion %": 92}, {"District": "Antakya", "Latitude": 36.202, "Longitude": 36.16, "Households": 83, "Completion %": 88}]};
 
 function fmt(n) {
